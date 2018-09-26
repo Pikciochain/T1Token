@@ -1,4 +1,4 @@
-from pikciotokens import base, context, events
+from pikciotok import base, context, events
 
 _TOKEN_VERSION = "T1.0"
 
@@ -31,7 +31,7 @@ on their behalf."""
 transferred = events.register("transfer", "sender", "recipient", "amount")
 burnt = events.register("burn", "sender", "amount", "new_supply")
 minted = events.register("mint", "sender", "amount", "new_supply")
-
+ 
 
 def init(supply: int, _name: str, _symbol: str):
     """Initialise this token with a new name, symbol and supply."""
