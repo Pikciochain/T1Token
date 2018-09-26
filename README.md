@@ -1,14 +1,26 @@
 # Pikcio - T1Token
 
-This project includes **Pikcio** toolkit to quickly write Pikcio compliant Tokens.
+This project includes **Pikcio** toolkit to quickly write Pikcio compliant 
+Tokens.
 
 ## Content
 
-This project contains a toolkit package, along with token examples and unit tests.
+This project contains a toolkit package, along with token examples and unit 
+tests.
 
-### Understanding the project modules
+### The Toolkit
 
-TO be written
+The `pikciotok` package contains 3 main modules:
+- `base`: Contains core classes and functions related to standard token 
+components (balance, allowance, transfers...).
+- `events`: Provides a way to register and fire events that can be propagated 
+outside the execution context.
+- `context`: Loaded at runtime with environment variables, such as the address 
+of the endpoint invoker.
+
+### The Examples
+The *examples* folder provides token use cases to help you get started and build 
+your own token contract.
 
 ## Getting Started
 
