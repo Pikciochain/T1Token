@@ -1,3 +1,4 @@
+from contextlib import contextmanager
 from functools import partial
 
 MAX_TOKEN_DECIMALS = 8
@@ -320,19 +321,14 @@ class Allowances(object):
         with allowances.transaction(from_address, sender, amount):
             # do something
         """
-        this = self
+        @contextmanager
+        def transaction_context():
+            self.require(account, delegate, amount)
+            yield self
+            # Following code will only be executed if no exception is raised while coroutine is suspended.
+            self.decrease(account, delegate, amount)
 
-        class _Context(object):
-
-            def __enter__(self):
-                this.require(account, delegate, amount)
-                return self
-
-            def __exit__(self, exc_type, exc_val, exc_tb):
-                if not exc_type:
-                    this.decrease(account, delegate, amount)
-
-        return _Context()
+        return transaction_context
 
 
 def transfer(balance_of, sender, to_address, amount):
