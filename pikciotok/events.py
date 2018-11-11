@@ -45,7 +45,7 @@ def register(event_name, *args):
     like:
         import events
         events.register("transfer", "sender", "recipient", "amount")
-        events.transfer(sender="a", recipient="b", amount:18.3)
+        events.transfer(sender="a", recipient="b", amount=18.3)
 
     Events are dispatched using the standard logging module. To subscribe to an
     an event notification, add an appropriate handler to the events logger.
