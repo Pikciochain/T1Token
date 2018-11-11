@@ -82,6 +82,7 @@ def register(event_name, *args):
                 )
             )
         # This log can be caught be any handler to process it.
+        kwargs["event"] = event_name
         logger.log(level, msg=json.dumps(kwargs))
 
     # Now that event is defined, fetch its unique id.
