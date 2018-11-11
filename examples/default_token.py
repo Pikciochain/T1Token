@@ -33,13 +33,13 @@ burnt = events.register("burn", "sender", "amount", "new_supply")
 minted = events.register("mint", "sender", "amount", "new_supply")
  
 
-def init(supply: int, _name: str, _symbol: str):
+def init(supply: int, name_: str, symbol_: str):
     """Initialise this token with a new name, symbol and supply."""
     global total_supply, initial_supply, name, symbol
     total_supply = initial_supply = (supply * 10 ** decimals)
     balance_of[context.sender] = total_supply
-    name = _name
-    symbol = _symbol
+    name = name_
+    symbol = symbol_
 
 
 def transfer(to_address: str, amount: int) -> bool:

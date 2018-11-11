@@ -75,14 +75,14 @@ def register(event_name, *args):
         if set(kwargs.keys()) != args:
             raise ValueError(
                 'Event args ({}) do not match event definition ({}) of '
-                '{} test'.format(
+                '{}'.format(
                     ', '.join(sorted(kwargs.keys())),
                     ', '.join(sorted(args)),
                     event_name
                 )
             )
         # This log can be caught be any handler to process it.
-        logger.log(level, msg=json.dumps(kwargs).strip('{}'))
+        logger.log(level, msg=json.dumps(kwargs))
 
     # Now that event is defined, fetch its unique id.
     event_id.append(id(_event))
