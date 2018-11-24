@@ -157,6 +157,20 @@ class Balances(object):
         self._post_withdraw(account)
         return new_balance
 
+    def transfer(self, sender, recipient, amount):
+        """Withdraws an amount from sender's account and puts it on recipient's
+         account. Returns the new balance of the recipient.
+
+         :param sender: Account to withdraw tokens from.
+         :type sender: str
+         :param recipient: Account to deposit tokens on.
+         :type recipient: str
+         :param amount: the amount to transfer.
+         :type amount
+         """
+        self.withdraw(sender, amount)
+        return self.deposit(recipient, amount)
+
 
 class Allowances(object):
     """Provide an object oriented interface to handle spending allowances.
@@ -228,6 +242,14 @@ class Allowances(object):
     def get_one(self, account, delegate):
         """Get the allowance of a delegate on specified account."""
         return self.get_all(account).get(delegate, self._default_allowance)
+
+    def has_allowances(self, account):
+        """Tells if provided account has at least one non empty allowance."""
+        return bool(self.allowances.get(account))
+
+    def is_allowed(self, account, allowed):
+        """Tells if account has an allowance for 'allowed'"""
+        return bool(self.get_one(account, allowed))
 
     def require(self, account, delegate, amount):
         """Check allowance of delegate on behalf of account.
