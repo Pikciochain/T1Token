@@ -74,6 +74,16 @@ def get_total_supply() -> int:
     return total_supply
 
 
+def get_balance(address: str) -> int:
+    """Gives the current balance of the specified account."""
+    return base.Balances(balance_of).get(address)
+
+
+def get_allowance(allowed_address: str, on_address: str) -> int:
+    """Gives the current allowance of allowed_address on on_address account."""
+    return base.Allowances(allowances).get_one(on_address, allowed_address)
+
+
 # Actions
 
 def transfer(to_address: str, amount: int) -> bool:
