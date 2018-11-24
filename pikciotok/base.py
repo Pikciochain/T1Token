@@ -1,8 +1,12 @@
 from contextlib import contextmanager
 from functools import partial
+from . import events
 
 MAX_TOKEN_DECIMALS = 8
 """Define the default number of decimals of a token."""
+
+# Defines some global variables that can be changed by user code to customise
+# base behaviour.
 
 missing_balance_means_zero = True
 """Indicate if semantically having no balance has the same meaning as having
@@ -14,6 +18,19 @@ Balances and Allowances classes.
 zero_allowance_allows_transfer = False
 """Indicate if an allowance of 0 allows transfers of 0. Depends on your
 business needs."""
+
+cancel_default_events = False
+"""If set to to true, default events like transferred won't be fired by base
+methods.
+"""
+
+# Add the events compliant with the T1 protocol
+transferred = events.register("transferred", "sender", "recipient", "amount")
+"""Fired when tokens are moved from an account to another."""
+burnt = events.register("burnt", "sender", "amount", "new_supply")
+"""Fired when tokens are destroyed."""
+minted = events.register("mint", "sender", "amount", "new_supply")
+"""Fired when tokens are created."""
 
 
 def assert_positive_amount(amount):
@@ -325,11 +342,14 @@ class Allowances(object):
         def transaction_context():
             self.require(account, delegate, amount)
             yield self
-            # Following code will only be executed if no exception is raised while coroutine is suspended.
+            # Following code will only be executed if no exception is raised
+            # while coroutine is suspended.
             self.decrease(account, delegate, amount)
 
         return transaction_context
 
+
+# Then come the base functions. They will do the work in most cases.
 
 def transfer(balance_of, sender, to_address, amount):
     """Default transfer. Amount is taken out of sender account and put
@@ -349,6 +369,8 @@ def transfer(balance_of, sender, to_address, amount):
     balances = Balances(balance_of)
     balances.withdraw(sender, amount)
     balances.deposit(to_address, amount)
+    if not cancel_default_events:
+        transferred(sender=sender, recipient=to_address, amount=amount)
     return True
 
 
@@ -369,6 +391,8 @@ def mint(balance_of, total_supply, account, amount):
     :rtype: int
     """
     Balances(balance_of).deposit(account, amount)
+    if not cancel_default_events:
+        minted(sender=account, amount=amount, new_supply=total_supply + amount)
     return total_supply + amount
 
 
@@ -389,6 +413,8 @@ def burn(balance_of, total_supply, account, amount):
     :rtype: int
     """
     Balances(balance_of).withdraw(account, amount)
+    if not cancel_default_events:
+        burnt(sender=account, amount=amount, new_supply=total_supply)
     return total_supply - amount
 
 
