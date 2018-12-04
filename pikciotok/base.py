@@ -486,7 +486,7 @@ def update_approve(allowances, account, delegate, delta_amount):
     return Allowances(allowances).update(account, delegate, delta_amount)
 
 
-def transfer_from(balance_of, allowances, delegate, from_address, to_address,
+def transfer_from(balance_of, allowances, delegate, sender, to_address,
                   amount):
     """Default transfer_from. The amount is taken out of from address instead
     of delegate, provided delegate has sufficient allowance on from address.
@@ -498,8 +498,8 @@ def transfer_from(balance_of, allowances, delegate, from_address, to_address,
     :param delegate: Address of the delegate asking for a transfer on behalf of
         from_address.
     :type delegate: str
-    :param from_address: Address of the transfer sender.
-    :type from_address: str
+    :param sender: Address of the transfer sender.
+    :type sender: str
     :param to_address: Address of the transfer recipient.
     :type to_address: str
     :param amount: The amount transferred.
@@ -507,8 +507,8 @@ def transfer_from(balance_of, allowances, delegate, from_address, to_address,
     :return: True if the operation was successful. False otherwise.
     :rtype: bool
     """
-    with Allowances(allowances).transaction(from_address, delegate, amount):
-        return transfer(balance_of, from_address, to_address, amount)
+    with Allowances(allowances).transaction(sender, delegate, amount):
+        return transfer(balance_of, sender, to_address, amount)
 
 
 def burn_from(balance_of, allowance, total_supply, delegate, from_address,
