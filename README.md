@@ -8,10 +8,10 @@ Tokens.
 This project contains a toolkit package, along with token examples and unit 
 tests.
 
-It also defines what the T1 protocol requires from tokens to be compliant
+It also defines what the T1 protocol requires from tokens to be compliant.
 
 ### T1 Token protocol
-Any token has to offer following functions with the same signature to be compliant.
+Any token has to offer following functions with the same signatures to be compliant.
 Public attributes (not preceded by an underscore) are highly recommended but
 not mandatory.
 
@@ -22,7 +22,15 @@ If any function is not entirely satisfactory, you can rewrite it completely, as
 long as the signature is identical.
 
 If some methods are part of the protocol but do not apply in your case, please
-make them raise a NotImplementedError.
+make them raise a `NotImplementedError`.
+
+#### Recommendations
+You can use the toolkit provided in this package in order to implement standard
+methods.
+
+When something goes wrong during the execution of an endpoint, it is better to
+raise an appropriate exception with details rather than returning `False` or `0`.
+This is not mandatory though.
 
 #### Mandatory attributes
 ```python
@@ -87,18 +95,23 @@ def get_allowance(allowed_address: str, on_address: str) -> int:
 # Actions
 
 def transfer(to_address: str, amount: int) -> bool:
-    """Execute a transfer from the sender to the specified address."""
+    """Execute a transfer from the sender to the specified address.
+    
+    :returns: True if execution was successful.
+    """
 
 
 def mint(amount: int) -> int:
     """Request tokens creation and add created amount to sender balance.
-    Returns new total supply.
+    
+    :returns: new total supply.
     """
 
 
 def burn(amount: int) -> int:
     """Destroy tokens. Tokens are withdrawn from sender's account.
-    Returns new total supply.
+    
+    :returns: new total supply.
     """
 
 
@@ -106,6 +119,8 @@ def approve(to_address: str, amount: int) -> bool:
     """Allow specified address to spend/use some tokens from sender account.
 
     The approval is set to specified amount.
+    
+    :returns: True if execution was successful.
     """
 
 
@@ -115,6 +130,8 @@ def update_approve(to_address: str, delta_amount: int) -> int:
 
     The approval is incremented of the specified amount. Negative amounts
     decrease the approval.
+    
+    :returns: The new approval after applying delta.
     """
 
 
@@ -123,6 +140,8 @@ def transfer_from(from_address: str, to_address: str, amount: int) -> bool:
 
     Operation is only allowed if sender has sufficient allowance on the source
     account.
+    
+    :returns: True if execution was successful.
     """
 
 ```

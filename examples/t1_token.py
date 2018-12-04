@@ -87,13 +87,17 @@ def get_allowance(allowed_address: str, on_address: str) -> int:
 # Actions
 
 def transfer(to_address: str, amount: int) -> bool:
-    """Execute a transfer from the sender to the specified address."""
+    """Execute a transfer from the sender to the specified address.
+
+    :returns: True if execution was successful.
+    """
     return base.transfer(balance_of, context.sender, to_address, amount)
 
 
 def mint(amount: int) -> int:
     """Request tokens creation and add created amount to sender balance.
-    Returns new total supply.
+
+    :returns: new total supply.
     """
     global total_supply
     total_supply = base.mint(balance_of, total_supply, context.sender, amount)
@@ -102,7 +106,8 @@ def mint(amount: int) -> int:
 
 def burn(amount: int) -> int:
     """Destroy tokens. Tokens are withdrawn from sender's account.
-    Returns new total supply.
+
+    :returns: new total supply.
     """
     global total_supply
     total_supply = base.burn(balance_of, total_supply, context.sender, amount)
@@ -113,6 +118,8 @@ def approve(to_address: str, amount: int) -> bool:
     """Allow specified address to spend/use some tokens from sender account.
 
     The approval is set to specified amount.
+
+    :returns: True if execution was successful.
     """
     return base.approve(allowances, context.sender, to_address, amount)
 
@@ -123,6 +130,8 @@ def update_approve(to_address: str, delta_amount: int) -> int:
 
     The approval is incremented of the specified amount. Negative amounts
     decrease the approval.
+
+    :returns: The new approval after applying delta.
     """
     return base.update_approve(allowances, context.sender, to_address,
                                delta_amount)
@@ -133,6 +142,8 @@ def transfer_from(from_address: str, to_address: str, amount: int) -> bool:
 
     Operation is only allowed if sender has sufficient allowance on the source
     account.
+
+    :returns: True if execution was successful.
     """
     return base.transfer_from(balance_of, allowances, context.sender,
                               from_address, to_address, amount)
